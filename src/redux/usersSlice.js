@@ -1,5 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { createAsyncThunk } from "@reduxjs/toolkit/src/createAsyncThunk";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
@@ -21,6 +20,17 @@ export const putUser = createAsyncThunk(
   async ({ updatedData, index }, { dispatch }) => {
     await axios.put(`${BASE_URL}/update`);
     dispatch(updateUser({ index: index, data: updatedData }));
+  }
+);
+
+export const createUser = createAsyncThunk(
+  "users/create",
+  async (data, { dispatch }) => {
+    await axios
+      .post(`${BASE_URL}/save`, data)
+      .then((d) => console.log(d))
+      .catch((err) => console.log(err));
+    dispatch(addUser(data));
   }
 );
 
