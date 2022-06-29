@@ -18,7 +18,7 @@ export const dropUser = createAsyncThunk(
 export const putUser = createAsyncThunk(
   "users/updateUser",
   async ({ updatedData, index }, { dispatch }) => {
-    await axios.put(`${BASE_URL}/update`);
+    await axios.put(`${BASE_URL}/update`, updatedData);
     dispatch(updateUser({ index: index, data: updatedData }));
   }
 );

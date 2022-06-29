@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { dropUser, getUsers } from "../redux/usersSlice";
+import { dropUser, getUsers, putUser } from "../redux/usersSlice";
 import { Button, Input, Modal, Table } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -16,12 +16,28 @@ const UsersTable = () => {
   const [modalData, setModalData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const onEdit = (username, email, address) => {
+  const onEdit = (username, email, address, index, id) => {
     setUsername(username);
     setEmail(email);
     setAddress(address);
-    setModalData([username, email, address]);
+    setModalData([username, email, address, index, id]);
     setModalVisible(true);
+  };
+
+  const changeAndSave = () => {
+    const updatedData = {
+      username: username,
+      email: email,
+      address: address,
+      id: modalData[3],
+    };
+
+    dispatch(
+      putUser({
+        updatedData: updatedData,
+        index: modalData[4],
+      })
+    );
   };
 
   const columns = [
@@ -53,14 +69,20 @@ const UsersTable = () => {
       align: "center",
       title: "Actions",
       key: "action",
-      render: (record, index) => {
+      render: (record, _, index) => {
         return (
           <ButtonGroup>
             <Button
               icon={<EditOutlined />}
-              onClick={() =>
-                onEdit(record.username, record.email, record.address)
-              }
+              onClick={() => {
+                onEdit(
+                  record.username,
+                  record.email,
+                  record.address,
+                  record.id,
+                  index
+                );
+              }}
             >
               Edit
             </Button>
@@ -84,6 +106,7 @@ const UsersTable = () => {
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
         okText={"Save changes"}
+        onOk={changeAndSave}
       >
         <Input.Group>
           <Input
