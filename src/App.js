@@ -1,5 +1,11 @@
+import FormCreate from "./components/FormCreate";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <FormCreate />
+    </>
+  );
 }
 
 export default App;
