@@ -1,11 +1,12 @@
-import {useSelector} from "react-redux";
-import {getUsers} from "../redux/usersSlice";
-import {Button, Table} from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import {dropUser, getUsers} from "../redux/usersSlice";
+import { Button, Table } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const UsersTable = () => {
   const datasource = useSelector(getUsers);
+  const dispatch = useDispatch();
 
   const columns = [
     {
@@ -36,12 +37,23 @@ const UsersTable = () => {
       align: "center",
       title: "Actions",
       key: "action",
-      render: () => {
+      render: (data, index) => {
+        return (
+          <ButtonGroup>
+            <Button icon={<EditOutlined />}>Edit</Button>
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={() => dispatch(dropUser({ id: data.id, index: index }))}
+            >
+              Delete
+            </Button>
+          </ButtonGroup>
+        );
       },
     },
   ];
 
-  return <Table dataSource={datasource} columns={columns}/>;
+  return <Table dataSource={datasource} columns={columns} />;
 };
 
 export default UsersTable;
